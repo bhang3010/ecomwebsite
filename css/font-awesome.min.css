@@ -1,0 +1,26 @@
+/*!
+ *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
+ *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
+ */
+
+/* Loại bỏ khai báo font FontAwesome cũ */
+/* @font-face { ... } */ 
+
+/* Thêm khai báo cho font Quicksand */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+/* Thêm khai báo cho font Nunito */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap');
+
+/* Thay thế font-family trong class .fa */
+.fa { 
+  /* display: inline-block; */ /* Bạn có thể giữ hoặc bỏ dòng này tùy thuộc vào cách bạn sử dụng font icon */
+  /* font: normal normal normal 14px/1 FontAwesome; */ /* Loại bỏ dòng này */
+  font-family: 'Quicksand', sans-serif; /* Sử dụng font Quicksand cho font icon */
+  /* ... (Các thuộc tính khác của class .fa) ... */
+}
+
+/* Áp dụng font Nunito cho toàn bộ trang web (hoặc cho các phần tử cụ thể) */
+body {
+  font-family: 'Nunito', sans-serif;
+}
