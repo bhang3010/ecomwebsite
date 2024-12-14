@@ -31,7 +31,7 @@ require('./db/conn.php'); // Kết nối database
 <section class="blog spad">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12 col-md-12">
+            <div class="col-sm-12 col-sm-7">
                 <div class="section-title">
                     <h2>Tin tức</h2>
                 </div>

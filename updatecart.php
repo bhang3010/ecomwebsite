@@ -1,5 +1,4 @@
 <?php
-session_start();
 $idsp = $_GET['id'];
 $qty = $_POST['qty'];
 

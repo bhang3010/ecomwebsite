@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user = mysqli_fetch_assoc($result);
         // Đăng nhập thành công
         $_SESSION['user_id'] = $user['id'];
+        session_regenerate_id(true); 
         // Chuyển hướng đến trang chủ hoặc trang người dùng
         header('Location: index.php'); // Thay đổi đường dẫn nếu cần
         exit();

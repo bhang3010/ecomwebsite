@@ -1,9 +1,8 @@
 
 <?php
+    require_once('components/header.php');
     $is_homepage = false;
-
     require_once('./db/conn.php');
-
     //kiem tra nut them vao gio duoc nhan
     if (isset($_POST['atcbtn'])) {
         $id = $_POST['pid'];
@@ -135,7 +134,6 @@
                             </div>
                             <button class="primary-btn" name="atcbtn">Thêm vào giỏ hàng</button>
                         </form>
-                        <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
                         <ul>
                             <li><b>Availability</b> <span>In Stock</span></li>
                             <li><b>Shipping</b> <span>01 day shipping. <samp>Free pickup today</samp></span></li>

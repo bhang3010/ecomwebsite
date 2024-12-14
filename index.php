@@ -24,13 +24,12 @@ body {
 
             <div class="categories__slider owl-carousel">
                 <?php
-                $sql_str = "select * from categories order by name";
-                $result = mysqli_query($conn, $sql_str);
-                while ($row = mysqli_fetch_assoc($result)){
-                    $image_path = "quantri/" . $row['image']; // Lấy đường dẫn ảnh từ database
-                    ?>
-                    <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="<?= $image_path ?>"> 
+                 $sql_str = "select * from categories order by name";
+                 $result = mysqli_query($conn, $sql_str);
+                    while ($row = mysqli_fetch_assoc($result)){
+                ?>
+                    <div class="col-lg-12">
+                        <div class="categories__item set-bg" data-setbg="img/categories/cat-1.jpg">
                             <h5><a href="#"><?=$row['name']?></a></h5>
                         </div>
                     </div>

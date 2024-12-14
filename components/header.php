@@ -1,8 +1,8 @@
 <?php 
+session_start(); 
 if (!isset($is_homepage)) {
     $is_homepage = false; // Hoặc có thể là true nếu trang hiện tại là trang chủ
 }
-session_start(); 
 $isLoggedIn = isset($_SESSION['user_id']);
 $userName = "";
 if ($isLoggedIn) {
@@ -217,7 +217,6 @@ if ($isLoggedIn) {
                 <div class="col-lg-3">
                     <div class="header__cart">
                         <ul>
-                            <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
                             <li><a href="./cart.php"><i class="fa fa-shopping-bag"></i> <span>
                                 <?php
                                     $cart = [];

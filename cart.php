@@ -1,9 +1,7 @@
 <?php
-$is_homepage = false;
-
-require_once('./db/conn.php');
-
 require_once('components/header.php');
+$is_homepage = false;
+require_once('./db/conn.php');
 $isLoggedIn = isset($_SESSION['user_id']);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -72,12 +70,14 @@ body {
                             if (isset($_SESSION['cart'])) {
                                 $cart = $_SESSION['cart'];
                             }
+                            // var_dump($cart);die();
                             $count = 0; //số thứ tự
                             $total = 0;
                             foreach ($cart as $item) {
                                 $total += $item['qty'] * $item['disscounted_price'];
                                 ?>
                                 <form action="updatecart.php?id=<?= $item['id'] ?>" method="post">
+
                                     <tr>
                                         <td>
                                             <?= ++$count ?>
@@ -97,6 +97,7 @@ body {
                                         </td>
                                     </tr>
                                 </form>
+
                                 <?php
                             }
                             ?>
@@ -108,9 +109,9 @@ body {
                         </div>
                         <div class="d-flex justify-content-between">
                             <a href="shop.php" class="btn btn-primary">Tiếp tục mua sắm</a>
-                            <a href="thanhtoan.php" class="btn btn-success">
-                                Thanh toán
-                            </a>
+                            <form method="post" action="thanhtoan.php"> 
+  <button type="submit" class="site-btn">Thanh toán</button>
+</form>
                         </div>
                     </div>
                 </div>
@@ -135,7 +136,6 @@ body {
                             <tbody>
                             <?php
                                 $user_id = $_SESSION['user_id'];
-
                                 // Lấy danh sách đơn hàng của người dùng
                                 $sql = "SELECT * FROM orders WHERE user_id = $user_id";
                                 $result = mysqli_query($conn, $sql);

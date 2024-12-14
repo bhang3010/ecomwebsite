@@ -1,6 +1,5 @@
 <?php
 require_once('components/header.php');
-
 require_once('./db/conn.php'); // Đảm bảo tệp kết nối đúng
 
 // Kiểm tra nếu form đã được gửi
