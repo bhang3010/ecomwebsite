@@ -65,6 +65,9 @@
                                             class="btn btn-facebook btn-user btn-block">
                                             <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
                                         </a>
+                                        <div class="text-center" style="margin-top: 20px;"> 
+    <a class="small" href="register.php">Chưa có tài khoản? Hãy đăng ký ngay</a> 
+</div>
                                     </form>
 
                                 </div>

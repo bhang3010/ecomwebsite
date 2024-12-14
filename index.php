@@ -16,25 +16,23 @@ body {
     </style>
     <!-- Categories Section Begin -->
     <section class="categories">
-    <div class="container">
-        <div class="row">
-            <div class="section-title">
-                <h2>Danh mục sản phẩm</h2>
-            </div>
+    <div class="section-title">
+    <h2>Danh mục sản phẩm</h2>
+</div>
 
-            <div class="categories__slider owl-carousel">
-                <?php
-                 $sql_str = "select * from categories order by name";
-                 $result = mysqli_query($conn, $sql_str);
-                    while ($row = mysqli_fetch_assoc($result)){
-                ?>
-                    <div class="col-lg-12">
-                        <div class="categories__item set-bg" data-setbg="img/categories/cat-1.jpg">
-                            <h5><a href="#"><?=$row['name']?></a></h5>
-                        </div>
-                    </div>
-                <?php } ?>
+<div class="categories__slider owl-carousel">
+    <?php
+    $sql_str = "select * from categories order by name";
+    $result = mysqli_query($conn, $sql_str);
+    while ($row = mysqli_fetch_assoc($result)){
+    ?>
+        <div class="col-lg-3">
+            <div class="categories__item set-bg" data-setbg="<?=$row['image']?>"> 
+                <h5><a href="#"><?=$row['name']?></a></h5>
             </div>
+        </div>
+    <?php } ?>
+</div>
         </div>
     </div>
 </section>

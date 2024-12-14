@@ -1,80 +1,53 @@
 <?php
 require_once('components/header.php');
-require_once('./db/conn.php'); // Đảm bảo tệp kết nối đúng
+$is_homepage = false;
 
-// Kiểm tra nếu form đã được gửi
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Lấy thông tin từ form
-    $firstname = $_POST['firstname'];
-    $lastname = $_POST['lastname'];
-    $address = $_POST['address'];
-    $phone = $_POST['phone'];
-    $email = $_POST['email'];
-    $payment_method = $_POST['payment_method']; // Phương thức thanh toán: COD hoặc TRANSFER
-    $user_id = $_SESSION['user_id']; // Lấy ID người dùng từ session (giả sử người dùng đã đăng nhập)
-
-    // Thêm thông tin đơn hàng vào bảng `orders`
-    $sql = "INSERT INTO orders (user_id, firstname, lastname, address, phone, email, status, created_at) 
-            VALUES (?, ?, ?, ?, ?, ?, 'Processing', NOW())";
-    
-    // Chuẩn bị câu lệnh
-    $stmt = mysqli_prepare($conn, $sql);
-
-    // Kiểm tra nếu câu lệnh đã được chuẩn bị thành công
-    if (!$stmt) {
-        echo "Error preparing statement: " . mysqli_error($conn);
-        exit;
-    }
-
-    // Gắn kết các tham số vào câu lệnh chuẩn
-    // 'i' cho user_id (kiểu integer), 's' cho các trường string (firstname, lastname, address, phone, email)
-    mysqli_stmt_bind_param($stmt, 'isssss', $user_id, $firstname, $lastname, $address, $phone, $email);
-    
-    // Thực thi câu lệnh
-    if (mysqli_stmt_execute($stmt)) {
-        $order_id = mysqli_insert_id($conn); // Lấy ID của đơn hàng vừa tạo
-
-        // Thêm chi tiết đơn hàng vào bảng `order_details`
-        foreach ($_SESSION['cart'] as $item) {
-            $sql_details = "INSERT INTO order_details (order_id, product_id, price, qty, total, payment_method, created_at) 
-                            VALUES (?, ?, ?, ?, ?, ?, NOW())";
-            $stmt_details = mysqli_prepare($conn, $sql_details);
-
-            // Kiểm tra nếu câu lệnh `order_details` đã được chuẩn bị thành công
-            if (!$stmt_details) {
-                echo "Error preparing statement: " . mysqli_error($conn);
-                exit;
-            }
-
-            // Gắn kết các tham số vào câu lệnh chuẩn
-            mysqli_stmt_bind_param($stmt_details, "iiidds", $order_id, $item['id'], $item['disscounted_price'], $item['qty'], ($item['disscounted_price'] * $item['qty']), $payment_method);
-
-            // Thực thi câu lệnh `order_details`
-            mysqli_stmt_execute($stmt_details);
-        }
-
-        // Dọn dẹp giỏ hàng sau khi thanh toán
-        unset($_SESSION['cart']);
-
-        // Chuyển hướng theo phương thức thanh toán
-        if ($payment_method == 'COD') {
-            header("Location: thankyou.php"); // Thanh toán khi nhận hàng
-            exit;
-        } else if ($payment_method == 'TRANSFER') {
-            header("Location: transfer.php"); // Thanh toán qua chuyển khoản
-        exit;
-        }
-    } else {
-        echo "Error executing statement: " . mysqli_error($conn);
-    }
+$cart = [];
+if (isset($_SESSION['cart'])) {
+    $cart = $_SESSION['cart'];
 }
 
+require_once('./db/conn.php');
+
+if (isset($_POST['btDathang'])) {
+    //lay thong tin khach hang tu form
+    $firstname = $_POST['firstname'];
+    $lastname = $_POST['lastname'];
+    $phone = $_POST['phone'];
+    $email = $_POST['email'];
+    $address = $_POST['address'];
+    //tao du lieu cho order
+    $sqli = "insert into orders values (0, 0, '$firstname', '$lastname', '$address', '$phone', '$email', 'Processing', now(), now())";
+    // echo $sqli;
+    //exit; // mysqli_query($conn, $sqli);
+    //lay id vua duoc them vao 
+    if (mysqli_query($conn, $sqli)) {
+        $last_order_id = mysqli_insert_id($conn);
+        //sau do them vao orer detail
+        foreach ($cart as $item) {
+            $masp = $item['id'];
+            $disscounted_price = $item['disscounted_price'];
+            $qty = $item['qty'];
+            $total = $item['qty'] * $item['disscounted_price'];
+            $sqli2 = "insert into order_details values 
+            (0, $last_order_id, $masp,  $disscounted_price, $qty, $total, now(), now())";
+            // echo $sqli2, exit;
+            mysqli_query($conn, $sqli2);
+        }
+    }
+
+    //xoa cart
+    unset($_SESSION["cart"]);
+    header("Location: thankyou.php");
+
+}
+
+
 ?>
-<!-- Breadcrumb Section Begin -->
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-body {
+    body {
     font-family: 'Quicksand', sans-serif; /* Sử dụng font Quicksand cho body */
   }
 
@@ -82,6 +55,7 @@ body {
     font-family: 'Nunito', sans-serif; /* Sử dụng font Nunito cho các heading */
   }
     </style>
+<!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="img/breadcrumb.jpg">
     <div class="container">
         <div class="row">
@@ -173,13 +147,6 @@ body {
                             <div class="checkout__order__total">Tổng tiền: <span>
                                     <?= number_format($total, 0, '', '.') . " VNĐ" ?>
                                 </span></div>
-                                <div class="form-group">
-                            <label for="payment_method">Phương thức thanh toán</label>
-                            <select name="payment_method" id="payment_method" class="form-control" required>
-                                <option value="COD">Thanh toán khi nhận hàng</option>
-                                <option value="TRANSFER">Chuyển khoản ngân hàng</option>
-                            </select>
-                        </div>
 
 
                             <button type="submit" class="site-btn" name="btDathang">Đặt hàng</button>
